@@ -1,13 +1,14 @@
 import logo from './assets/prts.webp';
 import './App.css';
+import Typewriter from './Typewriter.component';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} alt="prts" />
-        <h2>Call API</h2>
-        <h3>Typing test</h3>
+        <h1>Call API</h1>
+        <Typewriter text="Welcome, Doctor of Rhodes Island"/>
       </header>
     </div>
   );
