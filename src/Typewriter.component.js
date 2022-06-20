@@ -11,16 +11,16 @@ function* textGenerator(sentence) {
   }
 
   const delay = 15;
-    for (let i = 0; i < delay; i++) {
-      yield [text, true];
-    }
+  for (let i = 0; i < delay; i++) {
+    yield [text, true];
+  }
 }
 
-export default function Typewriter(prop) {
+export default function Typewriter({ sentence }) {
   const [[text, state], setText] = useState("");
 
   useEffect(() => {
-    const generator = textGenerator(prop.text);
+    const generator = textGenerator(sentence);
 
     const interval = window.setInterval(() => {
       const { value, done } = generator.next();
@@ -35,7 +35,7 @@ export default function Typewriter(prop) {
     return () => {
       window.clearInterval(interval);
     };
-  }, [prop]);
+  }, []);
 
   const className = `typewriter ${state ? 'caret-blink' : ''}`;
 

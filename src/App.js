@@ -1,14 +1,15 @@
 import logo from './assets/prts.webp';
 import './App.css';
 import Typewriter from './Typewriter.component';
+import { ClickableImage } from './ClickableImage.component';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} alt="prts" />
-        <h1>Call API</h1>
-        <Typewriter text="Welcome, Doctor of Rhodes Island"/>
+        <ClickableImage source={logo} />
+        <h1>primitive_rhodesisland_terminal_service</h1>
+        <Typewriter sentence="Connection: request"/>
       </header>
     </div>
   );

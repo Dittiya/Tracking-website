@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Todos
+
+- Create stylish front-end with performance in mind.
+- Tracking pull history with computer vision (Manually & uploading screenshots).
 ## Available Scripts
 
 In the project directory, you can run:
