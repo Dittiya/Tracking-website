@@ -9,7 +9,7 @@ function App() {
           ['Home', ''],
           ['History', 'history'],
         ].map(([title, url]) => (
-          <Link to={url} className='rounded-lg px-3 py-2 font-medium hover:bg-slate-100 hover:text-slate-900'>
+          <Link key={title} to={url} className='rounded-lg px-3 py-2 font-medium hover:bg-slate-100 hover:text-slate-900'>
             {title}
           </Link>
         ))}

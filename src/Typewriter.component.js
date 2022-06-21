@@ -35,7 +35,7 @@ export default function Typewriter({ sentence }) {
     return () => {
       window.clearInterval(interval);
     };
-  }, []);
+  });
 
   const className = `typewriter ${state ? 'caret-blink' : ''}`;
 

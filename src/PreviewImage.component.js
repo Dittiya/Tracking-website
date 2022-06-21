@@ -10,10 +10,10 @@ function PreviewImage() {
 
   return (
     <div className="container m-4">
-      <label for="image-file" className="mx-4">Upload image</label>
+      <label for="image-file" className="mr-4">Upload image</label>
       <input id="image-file" type="file" onChange={changeImg}></input>
       {currentImg && (
-        <div className="container w-1/2 m-4">
+        <div className="container w-1/2">
           <label className="text-2xl">Preview Image</label>
           <img src={URL.createObjectURL(currentImg)} alt="alt" />
         </div>
