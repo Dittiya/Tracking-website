@@ -1,7 +1,14 @@
 const tf = require('@tensorflow/tfjs');
 
+async function loadModel() {
+  const modelUrl = "https://raw.githubusercontent.com/Dittiya/Tracking-website/od-integration/ak_web_model/model.json";
+  const model = await tf.loadGraphModel(modelUrl);
+  console.log('Model loaded!');
+  return model
+}
 
-function ModelLoader({ image, model }) {
+function ModelLoader({ image }) {
+  const model = loadModel();
 
   async function processImg() {
     const imageTag = document.getElementById("image-tf");
@@ -27,8 +34,8 @@ function ModelLoader({ image, model }) {
   }
 
   function runPrediction(image) {
-    model.then(async function (res) {
-      const size = [1024, 1024];
+    model.then(async function (model) {
+      const size = [640, 640];
       let inf = tf.browser.fromPixels(image);
 
       // preprocess
@@ -36,11 +43,50 @@ function ModelLoader({ image, model }) {
       inf = inf.cast('int32');
       inf = inf.expandDims(0);
 
-      const prediction = await res.executeAsync(inf);
-      console.log(prediction);
+      console.log(model.outputNodes);
+      await model.executeAsync(inf).then(response => {
+        interpretation(response);
+      });
     }, function (err) {
       console.log(err);
     })
+  }
+
+  function interpretation(predictions) {
+    console.log(predictions);
+    console.log('Individuals: ');
+    
+    // log all tensors
+    for(let i=0; i<predictions.length; i++) {
+      console.log('Tensor ' + i + ':');
+      let foo = [];
+      let tensor = predictions[i].dataSync();
+      for(let j=0; j<20; j++) {
+        foo.push(tensor[j]);
+      }
+      console.log(foo);
+    }
+
+    console.log('TEST');
+    // test tensor 6 as scores
+    console.log('Tensor 6 as scores');
+    const scores = predictions[6].dataSync();
+    let indices = [];
+    for(let i=0; i<scores.length; i++) {
+      if(indices.length === 10) break
+      if(scores[i] > 0.9) indices.push(i);
+    }
+    console.log(indices);
+
+    // test tensor 4 as classes
+    console.log('Tensor 4 as classes');
+    const classes = predictions[4].dataSync();
+    let pc = [];
+    let py = [];
+    indices.forEach(e => pc.push(classes[e]));
+    indices.forEach(e => py.push(scores[e]));
+    console.log(pc);
+    console.log(py);
   }
 
   return (
