@@ -1,16 +1,8 @@
 import ModelLoader from './ModelLoader.component';
 import { useState } from "react";
-const tf = require('@tensorflow/tfjs');
-
-async function loadModel() {
-  const model = await tf.loadGraphModel("https://raw.githubusercontent.com/Dittiya/Tracking-website/od-integration/ak_web_model/model.json");
-  console.log('Model loaded!');
-  return model
-}
 
 function History() {
   const [currentImg, setCurrentImg] = useState();
-  const model = loadModel();
 
   const changeImg = (e) => {
     URL.revokeObjectURL(currentImg);
@@ -39,7 +31,7 @@ function History() {
       {/* component to load model */}
       <div className="container m-4">
         {currentImg && (
-          <ModelLoader image={URL.createObjectURL(currentImg)} model={model} />
+          <ModelLoader image={URL.createObjectURL(currentImg)} />
         )}
       </div>
     </div>
