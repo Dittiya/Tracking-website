@@ -2,10 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Done
+
+- Integrated object detection API from tfjs
+- Showed result (currently from logging)
 ## Todos
 
 - Create stylish front-end with performance in mind.
 - Tracking pull history with computer vision (Manually & uploading screenshots).
+- Train a mobile friendly model to reduce memory consumption (hard)
+- Display results in front-end
 ## Available Scripts
 
 In the project directory, you can run:

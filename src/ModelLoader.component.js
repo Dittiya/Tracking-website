@@ -1,7 +1,7 @@
 const tf = require('@tensorflow/tfjs');
 
 async function loadModel() {
-  const modelUrl = "https://raw.githubusercontent.com/Dittiya/Tracking-website/od-integration/ak_web_model/model.json";
+  const modelUrl = "https://raw.githubusercontent.com/Dittiya/Tracking-website/od-integration/ak_web_model_lite/model.json";
   const model = await tf.loadGraphModel(modelUrl);
   console.log('Model loaded!');
   return model
@@ -35,12 +35,12 @@ function ModelLoader({ image }) {
 
   function runPrediction(image) {
     model.then(async function (model) {
-      const size = [640, 640];
+      // const size = [640, 640];
       let inf = tf.browser.fromPixels(image);
 
       // preprocess
-      inf = tf.image.resizeBilinear(inf, size, false);
-      inf = inf.cast('int32');
+      // inf = tf.image.resizeBilinear(inf, size, false);
+      // inf = inf.cast('int32');
       inf = inf.expandDims(0);
 
       console.log(model.outputNodes);
@@ -54,23 +54,23 @@ function ModelLoader({ image }) {
 
   function interpretation(predictions) {
     console.log(predictions);
-    console.log('Individuals: ');
+    console.log('DEBUG: ');
     
     // log all tensors
     for(let i=0; i<predictions.length; i++) {
       console.log('Tensor ' + i + ':');
       let foo = [];
       let tensor = predictions[i].dataSync();
-      for(let j=0; j<20; j++) {
+      for(let j=0; j<30; j++) {
         foo.push(tensor[j]);
       }
       console.log(foo);
     }
 
     console.log('TEST');
-    // test tensor 6 as scores
-    console.log('Tensor 6 as scores');
-    const scores = predictions[6].dataSync();
+    // find tensor for 'detection_scores'
+    console.log('Tensor 3 as scores');
+    const scores = predictions[3].dataSync();
     let indices = [];
     for(let i=0; i<scores.length; i++) {
       if(indices.length === 10) break
@@ -78,15 +78,12 @@ function ModelLoader({ image }) {
     }
     console.log(indices);
 
-    // test tensor 4 as classes
-    console.log('Tensor 4 as classes');
-    const classes = predictions[4].dataSync();
+    // find tensor for 'detection_classes'
+    console.log('Tensor 0 as classes');
+    const classes = predictions[0].dataSync();
     let pc = [];
-    let py = [];
     indices.forEach(e => pc.push(classes[e]));
-    indices.forEach(e => py.push(scores[e]));
     console.log(pc);
-    console.log(py);
   }
 
   return (
@@ -94,7 +91,7 @@ function ModelLoader({ image }) {
       <button type="button" onClick={processImg} className="rounded-[12px] p-2 hover:bg-slate-100 hover:text-slate-900">
         Process
       </button>
-      <img id="image-tf" className='invisible w-1' alt='temp'/>
+      <img id="image-tf" className='w-1/4 h-1/4' alt='temp'/>
     </div>
   );
 }
