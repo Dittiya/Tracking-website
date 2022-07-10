@@ -1,15 +1,27 @@
-import ModelLoader from './ModelLoader.component';
 import { useState } from "react";
 
 function History() {
   const [currentImg, setCurrentImg] = useState();
 
+  async function loadModel() {
+    const path = process.env.PUBLIC_URL + '/best.onnx'
+    const model = await window.ort.InferenceSession.create(path);
+    console.log('model loaded!')
+    return model
+  }
+
+  const model = loadModel();
+
   const changeImg = (e) => {
     URL.revokeObjectURL(currentImg);
 
+    // change image when loaded
     let src = e.target.files;
     if (src && src.length) {
       setCurrentImg(src[0]);
+
+      // load model 
+
     }
   }
 
@@ -23,17 +35,15 @@ function History() {
         {currentImg && (
           <div className="container w-1/2">
             <label className="text-2xl">Preview Image</label>
-            <img src={URL.createObjectURL(currentImg)} alt="alt" />
+            <img id="image-tag" src={URL.createObjectURL(currentImg)} alt="alt" />
           </div>
         )}
       </div>
 
-      {/* component to load model */}
-      <div className="container m-4">
-        {currentImg && (
-          <ModelLoader image={URL.createObjectURL(currentImg)} />
-        )}
+      <div className='container  m-4'>
+
       </div>
+
     </div>
   );
 }
