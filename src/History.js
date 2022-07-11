@@ -54,6 +54,7 @@ function History() {
   }
 
   async function run(tensor) {
+    console.time('inference');
     try {
       const path = process.env.PUBLIC_URL + '/best.onnx'
       const session = await window.ort.InferenceSession.create(path);
@@ -65,6 +66,7 @@ function History() {
     } catch (e) {
       console.log(e);
     }
+    console.timeEnd('inference');
   }
 
   const predict = async (e) => {
