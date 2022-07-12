@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { output } from "./yolo_utils/postprocess";
+import { toTensor, imageData } from "./yolo_utils/preprocess";
 
 function History() {
-  const [currentImg, setCurrentImg] = useState();
 
   function handleCanvas(e) {
     let canvas = document.getElementById('image-canvas');
@@ -28,31 +29,6 @@ function History() {
     }
   }
 
-  function getImageData(width) {
-    const canvas = document.getElementById('image-canvas');
-    const ctx = canvas.getContext('2d');
-
-    return ctx.getImageData(0,0,width,width).data;
-  }
-
-  function imageDataToTensor(data, dims) {
-    const [R, G, B] = [[], [], []];
-    for (let i=0; i<data.length; i+=4) {
-      R.push(data[i]);
-      G.push(data[i+1]);
-      B.push(data[i+2]);
-    }
-
-    const transposed = R.concat(G).concat(B);
-    let i, l = transposed.length;
-    const float32Arr = new Float32Array(3*640*640);
-    for (i=0; i<l; i++) {
-      float32Arr[i] = transposed[i] / 255.0;
-    }
-    const inputTensor = new window.ort.Tensor('float32', float32Arr, dims);
-    return inputTensor;
-  }
-
   async function run(tensor) {
     console.time('inference');
     try {
@@ -60,44 +36,18 @@ function History() {
       const session = await window.ort.InferenceSession.create(path);
       const feeds = { images: tensor };
       const result = await session.run(feeds);
-
-      console.log('Prediction: ');
-      nms(result.output);
+      output(result.output);
     } catch (e) {
       console.log(e);
     }
     console.timeEnd('inference');
   }
 
-  function nms(prediction) {
-    console.time('nms');
-    let c = document.getElementById('image-canvas');
-    let ctx = c.getContext('2d');
-    ctx.lineWidth = "4";
-    ctx.strokeStyle = "red";
-
-    for (let i=0; i<=prediction.data.length; i+=21) {
-      let tensor = [];
-      tensor.push(parseInt(prediction.data[i]));
-      tensor.push(parseInt(prediction.data[i+1]));
-      tensor.push(parseInt(prediction.data[i+2]));
-      tensor.push(parseInt(prediction.data[i+3]));
-      tensor.push(prediction.data[i+4]);
-
-      if (prediction.data[i+4] > 0.7) {
-        ctx.beginPath();
-        ctx.rect(tensor[0]-0.5*tensor[2], tensor[1]-0.5*tensor[3], tensor[2], tensor[3]);
-        ctx.stroke();
-      }
-    }
-    console.timeEnd('nms');
-  }
-
   const predict = async (e) => {
     console.log('Predicting...');
     const dims = [1,3,640,640];
-    let img = getImageData(dims[2]);
-    const tensor = imageDataToTensor(img, dims);
+    let img = imageData(dims[2]);
+    const tensor = toTensor(img, dims);
     
     run(tensor);
   }
