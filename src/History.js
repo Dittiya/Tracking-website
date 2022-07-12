@@ -62,17 +62,41 @@ function History() {
       const result = await session.run(feeds);
 
       console.log('Prediction: ');
-      console.log(result.output);
+      nms(result.output);
     } catch (e) {
       console.log(e);
     }
     console.timeEnd('inference');
   }
 
+  function nms(prediction) {
+    console.time('nms');
+    let c = document.getElementById('image-canvas');
+    let ctx = c.getContext('2d');
+    ctx.lineWidth = "4";
+    ctx.strokeStyle = "red";
+
+    for (let i=0; i<=prediction.data.length; i+=21) {
+      let tensor = [];
+      tensor.push(parseInt(prediction.data[i]));
+      tensor.push(parseInt(prediction.data[i+1]));
+      tensor.push(parseInt(prediction.data[i+2]));
+      tensor.push(parseInt(prediction.data[i+3]));
+      tensor.push(prediction.data[i+4]);
+
+      if (prediction.data[i+4] > 0.7) {
+        ctx.beginPath();
+        ctx.rect(tensor[0]-0.5*tensor[2], tensor[1]-0.5*tensor[3], tensor[2], tensor[3]);
+        ctx.stroke();
+      }
+    }
+    console.timeEnd('nms');
+  }
+
   const predict = async (e) => {
     console.log('Predicting...');
     const dims = [1,3,640,640];
-    let img = getImageData(640);
+    let img = getImageData(dims[2]);
     const tensor = imageDataToTensor(img, dims);
     
     run(tensor);
