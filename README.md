@@ -4,14 +4,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Done
 
-- Integrated object detection API from tfjs
-- Showed result (currently from logging)
+- Integrated object detection API using ONNX
+- Shown bounding box result in canvas
 ## Todos
 
 - Create stylish front-end with performance in mind.
 - Tracking pull history with computer vision (Manually & uploading screenshots).
-- Train a mobile friendly model to reduce memory consumption (hard)
-- Display results in front-end
+- Train a mobile friendly model to reduce memory consumption (currently YOLOv5m).
+- Reduce inference time using WASM, should probably create switch between WASM and WEBGL. Current inference time is ~5 seconds/image.
+- Transform image from 1280x720 to 2x640x640.
 ## Available Scripts
 
 In the project directory, you can run:
