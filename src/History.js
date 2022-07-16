@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { output } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
 
@@ -36,7 +35,7 @@ function History() {
       const session = await window.ort.InferenceSession.create(path);
       const feeds = { images: tensor };
       const result = await session.run(feeds);
-      output(result.output);
+      output(result.output, 0.75);
     } catch (e) {
       console.log(e);
     }
