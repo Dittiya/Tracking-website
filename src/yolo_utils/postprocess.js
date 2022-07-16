@@ -25,7 +25,6 @@ export function output(prediction, threshold) {
 
             box = [...box, x-0.5*w, y-0.5*h, w, h, confidence, predClass];
             preds = [...preds, box];
-            drawBoxes(box);
         }
     }
     nonMaxSuppBox(preds);
@@ -50,6 +49,25 @@ function drawBoxes(coord) {
     ctx.fillText(classIdx, x, y);
 }
 
-export function nonMaxSuppBox(boxes) {
-    console.log(boxes);
+// TODO 
+// separate classes 
+async function nonMaxSuppBox(predictions) {
+    console.time('NMS');
+
+    let boxes = [];
+    let scores = [];
+    console.log(predictions);
+    for (let i=0; i<predictions.length; i++) {
+        if (predictions[i][5] === 7) {
+            boxes = [...boxes, predictions[i].slice(0, 4)];
+            scores = [...scores, predictions[i][4]];
+        }
+    }
+    const result = await window.tf.image.nonMaxSuppressionAsync(boxes, scores, 1);
+    const resultNMS = result.dataSync()[0];
+    let boxNMS = boxes[resultNMS];
+    boxNMS = [...boxNMS, scores[resultNMS]];
+    drawBoxes(boxNMS);
+
+    console.timeEnd('NMS');
 }
