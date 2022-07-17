@@ -42,32 +42,52 @@ function drawBoxes(coord) {
     ctx.strokeStyle = "red";
 
     let [x, y, w, h, conf, classIdx] = coord;
+    console.log(coord);
 
     ctx.beginPath();
     ctx.rect(x, y, w, h);
     ctx.stroke();
-    ctx.fillText(classIdx, x, y);
+
+    ctx.font = "normal 900 24px Unknown, sans-serif";
+    ctx.fillStyle = "white"
+    ctx.fillText(conf.toFixed(2), x, y-2);
+    ctx.fillText(classIdx, x+60, y-2);
 }
 
-// TODO 
-// separate classes 
 async function nonMaxSuppBox(predictions) {
     console.time('NMS');
 
-    let boxes = [];
-    let scores = [];
-    console.log(predictions);
-    for (let i=0; i<predictions.length; i++) {
-        if (predictions[i][5] === 7) {
-            boxes = [...boxes, predictions[i].slice(0, 4)];
-            scores = [...scores, predictions[i][4]];
-        }
+    let [classes, boxes, scores] = separateBoxes(predictions);
+    for (let i=0; i<classes.length; i++) {
+        const result = await window.tf.image.nonMaxSuppressionAsync(boxes[i], scores[i], 10);
+        const resultNMS = result.dataSync()[0];
+        let boxNMS = boxes[i][resultNMS];
+        boxNMS = [...boxNMS, scores[i][resultNMS], classes[i]];
+        drawBoxes(boxNMS);
     }
-    const result = await window.tf.image.nonMaxSuppressionAsync(boxes, scores, 1);
-    const resultNMS = result.dataSync()[0];
-    let boxNMS = boxes[resultNMS];
-    boxNMS = [...boxNMS, scores[resultNMS]];
-    drawBoxes(boxNMS);
 
     console.timeEnd('NMS');
+}
+
+// TODO
+// Does not work with multiple detections of the same class, fix soon
+function separateBoxes(boxes) {
+    let classIndices = [];
+    let sortedBoxes = [];
+    let sortedScores = [];
+    
+    for (let i=0; i<boxes.length; i++) {
+        const classLabel = boxes[i][5];
+        let idx = classIndices.findIndex(e => e === classLabel);
+        if ( idx === -1) {
+            classIndices.push(classLabel);
+            sortedBoxes.push([]);
+            sortedScores.push([]);
+            idx = classIndices.length-1;
+        }
+        sortedBoxes[idx].push(boxes[i].slice(0, 4));
+        sortedScores[idx].push(boxes[i][4]);
+    }
+
+    return [classIndices, sortedBoxes, sortedScores];
 }
