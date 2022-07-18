@@ -16,9 +16,9 @@ export function toTensor(data, dims) {
     return inputTensor;
 }
 
-export function imageData(width) {
+export function imageData(loc, width) {
     const canvas = document.getElementById('image-canvas');
     const ctx = canvas.getContext('2d');
 
-    return ctx.getImageData(0,0,width,width).data;
+    return ctx.getImageData(loc[0],loc[1],width,width).data;
 }

@@ -4,6 +4,7 @@ import { toTensor, imageData } from "./yolo_utils/preprocess";
 function History() {
 
   function handleCanvas(e) {
+    const imgSize = [1280, 640];
     let canvas = document.getElementById('image-canvas');
     let ctx = canvas.getContext('2d');
 
@@ -12,9 +13,9 @@ function History() {
       let img = new Image();
       img.src = event.target.result;
       img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
+          canvas.width = imgSize[0];
+          canvas.height = imgSize[1];
+          ctx.drawImage(img, 0, 0, imgSize[0], imgSize[1]);
       }
     }
     reader.readAsDataURL(e);
@@ -28,14 +29,16 @@ function History() {
     }
   }
 
-  async function run(tensor) {
+  async function run(tensor, imgN) {
     console.time('inference');
+    const threshold = 0.75;
+
     try {
       const path = process.env.PUBLIC_URL + '/best.onnx'
       const session = await window.ort.InferenceSession.create(path);
       const feeds = { images: tensor };
       const result = await session.run(feeds);
-      output(result.output, 0.75);
+      output(result.output, threshold, imgN);
     } catch (e) {
       console.log(e);
     }
@@ -45,10 +48,15 @@ function History() {
   const predict = async (e) => {
     console.log('Predicting...');
     const dims = [1,3,640,640];
-    let img = imageData(dims[2]);
+    const imgLoc1 = [0,0], imgLoc2 = [640,0];
+    let img = imageData(imgLoc1, dims[2]);
     const tensor = toTensor(img, dims);
+
+    let img2 = imageData(imgLoc2, dims[2]);
+    const tensor2 = toTensor(img2, dims);
     
     run(tensor);
+    run(tensor2, 2);
   }
 
   return (

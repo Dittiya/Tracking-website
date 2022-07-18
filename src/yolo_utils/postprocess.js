@@ -1,4 +1,4 @@
-export function output(prediction, threshold) {
+export function output(prediction, threshold, imgN) {
     const stride = prediction.dims[2] || 0;
     const data = prediction.data;
 
@@ -28,7 +28,7 @@ export function output(prediction, threshold) {
             preds = [...preds, box];
         }
     }
-    nonMaxSuppBox(preds);
+    nonMaxSuppBox(preds, imgN);
 }
 
 function getClass(data, threshold) {
@@ -36,17 +36,20 @@ function getClass(data, threshold) {
     return data.findIndex(isClass);
 }
 
-function drawBoxes(coord) {
+function drawBoxes(coord, imgN) {
     let canvas = document.getElementById('image-canvas');
     let ctx = canvas.getContext('2d');
     ctx.lineWidth = "4";
     ctx.strokeStyle = "red";
 
     let [x, y, w, h, conf, classIdx] = coord;
-    console.log(coord);
+
+    w = w-x;
+    h = h-y;
+    if (imgN === 2) x += 640;
 
     ctx.beginPath();
-    ctx.rect(x, y, w-x, h-y);
+    ctx.rect(x, y, w, h);
     ctx.stroke();
 
     ctx.font = "normal 900 24px Unknown, sans-serif";
@@ -55,13 +58,10 @@ function drawBoxes(coord) {
     ctx.fillText(classIdx, x+60, y-2);
 }
 
-async function nonMaxSuppBox(predictions) {
+async function nonMaxSuppBox(predictions, imgN) {
     console.time('NMS');
 
     let [classes, boxes, scores] = separateBoxes(predictions);
-    console.log(classes);
-    console.log(boxes);
-    console.log(scores);
 
     // transform boxes from xywh to x1y1x2y2
     for (let i=0; i<boxes.length; i++) {
@@ -77,7 +77,7 @@ async function nonMaxSuppBox(predictions) {
         for (let j=0; j<resultNMS.length; j++) {
             let boxNMS = boxes[i][resultNMS[j]];
             boxNMS = [...boxNMS, scores[i][resultNMS[j]], classes[i]];
-            drawBoxes(boxNMS);
+            drawBoxes(boxNMS, imgN);
         }
     }
 
