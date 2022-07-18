@@ -45,7 +45,7 @@ function drawBoxes(coord) {
     console.log(coord);
 
     ctx.beginPath();
-    ctx.rect(x, y, w, h);
+    ctx.rect(x, y, w-x, h-y);
     ctx.stroke();
 
     ctx.font = "normal 900 24px Unknown, sans-serif";
@@ -58,19 +58,32 @@ async function nonMaxSuppBox(predictions) {
     console.time('NMS');
 
     let [classes, boxes, scores] = separateBoxes(predictions);
+    console.log(classes);
+    console.log(boxes);
+    console.log(scores);
+
+    // transform boxes from xywh to x1y1x2y2
+    for (let i=0; i<boxes.length; i++) {
+        for (let j=0; j<boxes[i].length; j++) {
+            boxes[i][j][2] = boxes[i][j][0] + boxes[i][j][2];
+            boxes[i][j][3] = boxes[i][j][1] + boxes[i][j][3];
+        }
+    }
+
     for (let i=0; i<classes.length; i++) {
         const result = await window.tf.image.nonMaxSuppressionAsync(boxes[i], scores[i], 10);
-        const resultNMS = result.dataSync()[0];
-        let boxNMS = boxes[i][resultNMS];
-        boxNMS = [...boxNMS, scores[i][resultNMS], classes[i]];
-        drawBoxes(boxNMS);
+        const resultNMS = result.dataSync();
+        for (let j=0; j<resultNMS.length; j++) {
+            console.log(resultNMS[j]);
+            let boxNMS = boxes[i][resultNMS[j]];
+            boxNMS = [...boxNMS, scores[i][resultNMS[j]], classes[i]];
+            drawBoxes(boxNMS);
+        }
     }
 
     console.timeEnd('NMS');
 }
 
-// TODO
-// Does not work with multiple detections of the same class, fix soon
 function separateBoxes(boxes) {
     let classIndices = [];
     let sortedBoxes = [];
