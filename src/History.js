@@ -47,14 +47,15 @@ function History() {
 
   const predict = async (e) => {
     console.log('Predicting...');
-    const dims = [1,3,640,640];
-    const imgLoc1 = [0,0], imgLoc2 = [640,0];
-    let img = imageData(imgLoc1, dims[2]);
-    const tensor = toTensor(img, dims);
 
-    let img2 = imageData(imgLoc2, dims[2]);
-    const tensor2 = toTensor(img2, dims);
-    
+    const dims = [1,3,640,640];
+    const imgLoc1 = [0,0], 
+          imgLoc2 = [640,0];
+    const img = imageData(imgLoc1, dims[2]), 
+          img2 = imageData(imgLoc2, dims[2]);
+    const tensor = toTensor(img, dims), 
+          tensor2 = toTensor(img2, dims);
+
     run(tensor);
     run(tensor2, 2);
   }
