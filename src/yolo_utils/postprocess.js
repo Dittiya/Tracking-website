@@ -13,7 +13,6 @@ export function output(prediction, threshold) {
         // 4 is the confidence
         // 5 to stride are classes from 0 to n (n = total classes)
         // x, y is the center of the box while w, h is the size
-
         const confidence = data[i+4];
 
         if (confidence > threshold) {
@@ -22,6 +21,8 @@ export function output(prediction, threshold) {
             const w = data[i+2];
             const h = data[i+3];
             const predClass = getClass(data.slice(i+5, i+stride), threshold);
+
+            if (predClass === -1) break;
 
             box = [...box, x-0.5*w, y-0.5*h, w, h, confidence, predClass];
             preds = [...preds, box];
@@ -74,7 +75,6 @@ async function nonMaxSuppBox(predictions) {
         const result = await window.tf.image.nonMaxSuppressionAsync(boxes[i], scores[i], 10);
         const resultNMS = result.dataSync();
         for (let j=0; j<resultNMS.length; j++) {
-            console.log(resultNMS[j]);
             let boxNMS = boxes[i][resultNMS[j]];
             boxNMS = [...boxNMS, scores[i][resultNMS[j]], classes[i]];
             drawBoxes(boxNMS);
