@@ -1,16 +1,20 @@
-import logo from './assets/prts.webp';
 import './App.css';
-import Typewriter from './Typewriter.component';
-import { ClickableImage } from './ClickableImage.component';
+import { Outlet, Link } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <ClickableImage source={logo} />
-        <h1>primitive_rhodesisland_terminal_service</h1>
-        <Typewriter sentence="Connection: request"/>
-      </header>
+    <div className="container bg-gray-700 text-white h-screen">
+      <nav className='bg-gray-800 flex sm:justify-left space-x-4 pl-4'>
+        {[
+          ['Home', ''],
+          ['History', 'history'],
+        ].map(([title, url]) => (
+          <Link key={title} to={url} className='rounded-lg px-3 py-2 font-medium hover:bg-slate-100 hover:text-slate-900'>
+            {title}
+          </Link>
+        ))}
+      </nav>
+      <Outlet />
     </div>
   );
 }
