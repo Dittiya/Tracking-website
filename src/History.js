@@ -1,6 +1,16 @@
 import { output } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
 
+async function loadModel() {
+  const path = process.env.PUBLIC_URL + '/best.onnx'
+  return await window.ort.InferenceSession.create(path, {executionProviders: ['wasm']});
+}
+
+let session;
+loadModel().then(res => {
+  session = res;
+});
+
 function History() {
 
   function handleCanvas(e) {
@@ -30,19 +40,20 @@ function History() {
   }
 
   async function run(tensor, imgN) {
-    console.time('inference');
+    const start = new Date();
     const threshold = 0.75;
 
     try {
-      const path = process.env.PUBLIC_URL + '/best.onnx'
-      const session = await window.ort.InferenceSession.create(path);
       const feeds = { images: tensor };
       const result = await session.run(feeds);
       output(result.output, threshold, imgN);
     } catch (e) {
       console.log(e);
     }
-    console.timeEnd('inference');
+
+    const end = new Date();
+    const inferTime = end.getTime() - start.getTime();
+    console.log('Inference time: ' + inferTime);
   }
 
   const predict = async (e) => {
@@ -56,7 +67,9 @@ function History() {
     const tensor = toTensor(img, dims), 
           tensor2 = toTensor(img2, dims);
 
+    console.log('1st prediction');
     run(tensor);
+    console.log('2nd prediction');
     run(tensor2, 2);
   }
 
