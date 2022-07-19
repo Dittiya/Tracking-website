@@ -1,18 +1,21 @@
+import { useEffect, useState } from "react";
 import { output } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
 
-async function loadModel() {
-  const path = process.env.PUBLIC_URL + '/best.onnx'
-  return await window.ort.InferenceSession.create(path, {executionProviders: ['wasm']});
-}
-
-let session;
-loadModel().then(res => {
-  console.log('session loaded!');
-  session = res;
-});
-
 function History() {
+  const [session, setActive] = useState(false);
+
+  async function loadModel() {
+    const path = process.env.PUBLIC_URL + '/best.onnx'
+    return await window.ort.InferenceSession.create(path, { executionProviders: ['wasm'] });
+  }
+
+  useEffect(() => {
+    loadModel().then(res => {
+      console.log('session loaded!');
+      setActive(res);
+    })
+  }, []);
 
   function handleCanvas(e) {
     const imgSize = [1280, 640];
@@ -54,7 +57,7 @@ function History() {
 
     const end = new Date();
     const inferTime = end.getTime() - start.getTime();
-    console.log('Inference time: ' + inferTime);
+    console.log('Inference time: ' + inferTime + ' ms');
   }
 
   const predict = async (e) => {
@@ -89,7 +92,7 @@ function History() {
           </div>
 
           <div className='container m-4'>
-            <button id="btn-predict" className="rounded-full" onClick={predict}>Predict</button>
+            <button id="btn-predict" className={`${session ? '' : 'invisible'}`} onClick={predict}>Predict</button>
           </div>
         </div>
 
