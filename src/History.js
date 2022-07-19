@@ -8,6 +8,7 @@ async function loadModel() {
 
 let session;
 loadModel().then(res => {
+  console.log('session loaded!');
   session = res;
 });
 
