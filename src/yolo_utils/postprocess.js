@@ -1,3 +1,5 @@
+import classes from './classes.json';
+
 export function output(prediction, threshold, imgN) {
     const stride = prediction.dims[2] || 0;
     const data = prediction.data;
@@ -55,7 +57,7 @@ function drawBoxes(coord, imgN) {
     ctx.font = "normal 900 24px Unknown, sans-serif";
     ctx.fillStyle = "white"
     ctx.fillText(conf.toFixed(2), x, y-2);
-    ctx.fillText(classIdx, x+60, y-2);
+    ctx.fillText(classes[classIdx]['name'], x+60, y-2);
 }
 
 async function nonMaxSuppBox(predictions, imgN) {

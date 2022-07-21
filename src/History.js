@@ -3,18 +3,18 @@ import { output } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
 
 function History() {
-  const [session, setActive] = useState(false);
+  const [session, setSession] = useState(false);
 
   async function loadModel() {
-    const path = process.env.PUBLIC_URL + '/best.onnx'
+    const path = process.env.PUBLIC_URL + '/best.onnx';
     return await window.ort.InferenceSession.create(path, { executionProviders: ['wasm'] });
   }
 
   useEffect(() => {
     loadModel().then(res => {
       console.log('session loaded!');
-      setActive(res);
-    })
+      setSession(res);
+    });
   }, []);
 
   function handleCanvas(e) {
