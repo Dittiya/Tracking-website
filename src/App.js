@@ -1,9 +1,9 @@
-import './App.css';
+// import './App.css';
 import { Outlet, Link } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="container bg-gray-700 text-white h-screen">
+    <div className="min-h-screen bg-gray-700 text-white">
       <nav className='bg-gray-800 flex sm:justify-left space-x-4 pl-4'>
         {[
           ['Home', ''],
@@ -15,6 +15,9 @@ function App() {
         ))}
       </nav>
       <Outlet />
+      <footer className="bg-gray-700 text-gray-700">
+        <h1>Deez</h1>
+      </footer>
     </div>
   );
 }
