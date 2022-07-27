@@ -5,14 +5,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Done
 
 - Integrated object detection API using ONNX
-- Shown bounding box result in canvas
+- Show bounding box results in canvas
+- Transform image from 1280x720 to 2x640x640.
+- Using Yolov5s to reduce inference and load time.
 ## Todos
 
-- Create stylish front-end with performance in mind.
+- Do something with the FE experience.
 - Tracking pull history with computer vision (Manually & uploading screenshots).
-- Train a mobile friendly model to reduce memory consumption (currently YOLOv5m).
-- Reduce inference time using WASM, should probably create switch between WASM and WEBGL. Current inference time is ~5 seconds/image.
-- Transform image from 1280x720 to 2x640x640.
+- Add 4 stars operators.
+- Reduce inference time using WASM, should probably create switch between WASM and WEBGL. Current inference time is ~5 seconds/image depending of the machine's cpu power. (WEBGL currently have issue with Yolov5 and ONNX runtime-web)
+
 ## Available Scripts
 
 In the project directory, you can run:
