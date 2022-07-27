@@ -15,8 +15,8 @@ function App() {
         ))}
       </nav>
       <Outlet />
-      <footer className="bg-gray-700 text-gray-700">
-        <h1>Deez</h1>
+      <footer className="bg-gray-700">
+        <h1 className='text-gray-700'>Deez</h1>
       </footer>
     </div>
   );

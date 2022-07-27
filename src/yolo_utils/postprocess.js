@@ -1,4 +1,4 @@
-import classes from './classes.json';
+import classesJSON from './classes.json';
 
 export function output(prediction, threshold, imgN) {
     const start = new Date();
@@ -62,7 +62,7 @@ function drawBoxes(coord, imgN) {
     ctx.font = "normal 900 24px Unknown, sans-serif";
     ctx.fillStyle = "white"
     ctx.fillText(conf.toFixed(2), x, y-2);
-    ctx.fillText(classes[classIdx]['name'], x+60, y-2);
+    ctx.fillText(classesJSON[classIdx]['name'], x+60, y-2);
 }
 
 async function nonMaxSuppBox(predictions, imgN) {
@@ -84,7 +84,7 @@ async function nonMaxSuppBox(predictions, imgN) {
             let boxNMS = boxes[i][resultNMS[j]];
             boxNMS = [...boxNMS, scores[i][resultNMS[j]], classes[i]];
             drawBoxes(boxNMS, imgN);
-            detections.push(boxNMS)
+            detections.push(classesJSON[classes[i]]['name']);
         }
     }
 

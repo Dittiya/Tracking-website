@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { output } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
+import Detections from "./components/Detections";
 
 function History() {
   const [session, setSession] = useState(false);
@@ -96,6 +97,10 @@ function History() {
           </div>
         </div>
 
+      </div>
+
+      <div className="container m-4">
+        <Detections />
       </div>
 
     </div>
