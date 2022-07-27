@@ -1,6 +1,7 @@
-import classes from './classes.json';
+import classesJSON from './classes.json';
 
 export function output(prediction, threshold, imgN) {
+    const start = new Date();
     const stride = prediction.dims[2] || 0;
     const data = prediction.data;
 
@@ -31,6 +32,10 @@ export function output(prediction, threshold, imgN) {
         }
     }
     nonMaxSuppBox(preds, imgN);
+    
+    const end = new Date();
+    const nmsTime = end.getTime() - start.getTime();
+    console.log('NMS time: ' + nmsTime + ' ms');
 }
 
 function getClass(data, threshold) {
@@ -57,12 +62,10 @@ function drawBoxes(coord, imgN) {
     ctx.font = "normal 900 24px Unknown, sans-serif";
     ctx.fillStyle = "white"
     ctx.fillText(conf.toFixed(2), x, y-2);
-    ctx.fillText(classes[classIdx]['name'], x+60, y-2);
+    ctx.fillText(classesJSON[classIdx]['name'], x+60, y-2);
 }
 
 async function nonMaxSuppBox(predictions, imgN) {
-    console.time('NMS');
-
     let [classes, boxes, scores] = separateBoxes(predictions);
 
     // transform boxes from xywh to x1y1x2y2
@@ -73,6 +76,7 @@ async function nonMaxSuppBox(predictions, imgN) {
         }
     }
 
+    let detections = [];
     for (let i=0; i<classes.length; i++) {
         const result = await window.tf.image.nonMaxSuppressionAsync(boxes[i], scores[i], 10);
         const resultNMS = result.dataSync();
@@ -80,10 +84,12 @@ async function nonMaxSuppBox(predictions, imgN) {
             let boxNMS = boxes[i][resultNMS[j]];
             boxNMS = [...boxNMS, scores[i][resultNMS[j]], classes[i]];
             drawBoxes(boxNMS, imgN);
+            detections.push(classesJSON[classes[i]]['name']);
         }
     }
 
-    console.timeEnd('NMS');
+    storeDetections(detections);
+    return JSON.parse(sessionStorage.getItem("detections"));
 }
 
 function separateBoxes(boxes) {
@@ -105,4 +111,19 @@ function separateBoxes(boxes) {
     }
 
     return [classIndices, sortedBoxes, sortedScores];
+}
+
+function storeDetections(detections) {
+    let getter = JSON.parse(sessionStorage.getItem("detections"));
+    if (getter === null) {
+        sessionStorage.setItem("detections", JSON.stringify(detections));
+        return;
+    }
+
+    for (let i=0; i<detections.length; i++) {
+        getter.push(detections[i]);
+    }
+
+    sessionStorage.setItem("detections", JSON.stringify(getter));
+    return;
 }
