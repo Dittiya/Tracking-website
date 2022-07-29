@@ -113,7 +113,7 @@ function History() {
       </div>
 
       <div className="container m-4">
-        <Statistics />
+        <Statistics state={update} />
       </div>
     </div>
   );
