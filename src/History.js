@@ -46,24 +46,25 @@ function History() {
     }
   }
 
-  async function run(tensor, imgN) {
+  async function run(tensor, tensor2, imgN) {
     const start = new Date();
     const threshold = 0.75;
     let out;
+    let out2;
 
-    try {
-      const feeds = { images: tensor };
-      const result = await session.run(feeds);
-      out = output(result.output, threshold, imgN);
-    } catch (e) {
-      console.log(e);
-    }
+    const feeds = { images: tensor };
+    const result = await session.run(feeds);
+    out = output(result.output, threshold);
+
+    const feeds2 = { images: tensor2 };
+    const result2 = await session.run(feeds2);
+    out2 = output(result2.output, threshold, imgN);
 
     const end = new Date();
     const inferTime = end.getTime() - start.getTime();
     console.log('Inference time: ' + inferTime + ' ms');
 
-    return out;
+    return [out, out2];
   }
 
   function predict() {
@@ -77,14 +78,16 @@ function History() {
     const tensor = toTensor(img, dims), 
           tensor2 = toTensor(img2, dims);
 
-    run(tensor).then((result) => {
-      storeDetections(result);
-      setUpdate((prev) => !prev);
+    run(tensor, tensor2, 2).then((result) => {
+      result[1].then((response) => {
+        result[0].then((result) => {
+          storeDetections(response);
+          storeDetections(result);
+          setUpdate((prev) => !prev);
+        });
+      });
     });
-    run(tensor2, 2).then((result) => {
-      storeDetections(result);
-      setUpdate((prev) => !prev);
-    });
+
   }
 
   return (
