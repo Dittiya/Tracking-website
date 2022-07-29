@@ -31,11 +31,12 @@ export function output(prediction, threshold, imgN) {
             preds = [...preds, box];
         }
     }
-    nonMaxSuppBox(preds, imgN);
     
     const end = new Date();
     const nmsTime = end.getTime() - start.getTime();
     console.log('NMS time: ' + nmsTime + ' ms');
+
+    return nonMaxSuppBox(preds, imgN);
 }
 
 function getClass(data, threshold) {
@@ -84,12 +85,12 @@ async function nonMaxSuppBox(predictions, imgN) {
             let boxNMS = boxes[i][resultNMS[j]];
             boxNMS = [...boxNMS, scores[i][resultNMS[j]], classes[i]];
             drawBoxes(boxNMS, imgN);
-            detections.push(classesJSON[classes[i]]['name']);
+            detections.push(classes[i]);
         }
     }
 
-    storeDetections(detections);
-    return JSON.parse(sessionStorage.getItem("detections"));
+    
+    return detections;
 }
 
 function separateBoxes(boxes) {
@@ -113,7 +114,7 @@ function separateBoxes(boxes) {
     return [classIndices, sortedBoxes, sortedScores];
 }
 
-function storeDetections(detections) {
+export function storeDetections(detections) {
     let getter = JSON.parse(sessionStorage.getItem("detections"));
     if (getter === null) {
         sessionStorage.setItem("detections", JSON.stringify(detections));

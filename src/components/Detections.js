@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
+import classesJSON from '../yolo_utils/classes.json';
 
-function Detections() {
-  const [detections, setDetection] = useState(null);
+function Detections({ state }) {
+  const [detections, setDetection] = useState(JSON.parse(sessionStorage.getItem("detections")));
 
   useEffect(() => {
-    let getter = JSON.parse(sessionStorage.getItem("detections")) || null;
-    setDetection(getter);
-  }, []);
+    setDetection(JSON.parse(sessionStorage.getItem("detections")));
+  }, [state]);
 
   function reload() {
     let getDets = JSON.parse(sessionStorage.getItem("detections"));
@@ -19,11 +19,10 @@ function Detections() {
         <h1>Detection Result</h1>
         <button className="ml-4" onClick={reload}>Reload</button>
       </div>
-      <div className="container">
-        <h1>Result</h1>
+      <div className="container ml-2">
         <ul>
-          {detections && detections.map((detection, index) => (
-            <li key={index}>{detection}</li>
+          {detections && detections.map((det, index) => (
+            <li key={index}>{index+1}. {classesJSON[det]['name']}</li>
           ))}
         </ul>
       </div>

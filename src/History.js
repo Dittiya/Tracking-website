@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { output } from "./yolo_utils/postprocess";
+import { output, storeDetections } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
 import Detections from "./components/Detections";
+import Statistics from "./components/Statistics";
 
 function History() {
   const [session, setSession] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   async function loadModel() {
     const path = process.env.PUBLIC_URL + '/best.onnx';
@@ -13,7 +15,7 @@ function History() {
 
   useEffect(() => {
     loadModel().then(res => {
-      console.log('session loaded!');
+      console.log('Session loaded!');
       setSession(res);
     });
   }, []);
@@ -47,11 +49,12 @@ function History() {
   async function run(tensor, imgN) {
     const start = new Date();
     const threshold = 0.75;
+    let out;
 
     try {
       const feeds = { images: tensor };
       const result = await session.run(feeds);
-      output(result.output, threshold, imgN);
+      out = output(result.output, threshold, imgN);
     } catch (e) {
       console.log(e);
     }
@@ -59,9 +62,11 @@ function History() {
     const end = new Date();
     const inferTime = end.getTime() - start.getTime();
     console.log('Inference time: ' + inferTime + ' ms');
+
+    return out;
   }
 
-  const predict = async (e) => {
+  function predict() {
     console.log('Predicting...');
 
     const dims = [1,3,640,640];
@@ -72,10 +77,13 @@ function History() {
     const tensor = toTensor(img, dims), 
           tensor2 = toTensor(img2, dims);
 
-    console.log('1st prediction');
-    run(tensor);
-    console.log('2nd prediction');
-    run(tensor2, 2);
+    run(tensor).then((result) => {
+      storeDetections(result);
+    });
+    run(tensor2, 2).then((result) => {
+      storeDetections(result);
+      setUpdate(JSON.parse(sessionStorage.getItem("detections")));
+    });
   }
 
   return (
@@ -100,9 +108,12 @@ function History() {
       </div>
 
       <div className="container m-4">
-        <Detections />
+        <Detections state={update} />
       </div>
 
+      <div className="container m-4">
+        <Statistics />
+      </div>
     </div>
   );
 }
