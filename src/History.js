@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { output } from "./yolo_utils/postprocess";
+import { output, storeDetections } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
 import Detections from "./components/Detections";
+import Statistics from "./components/Statistics";
 
 function History() {
   const [session, setSession] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   async function loadModel() {
     const path = process.env.PUBLIC_URL + '/best.onnx';
@@ -13,7 +15,7 @@ function History() {
 
   useEffect(() => {
     loadModel().then(res => {
-      console.log('session loaded!');
+      console.log('Session loaded!');
       setSession(res);
     });
   }, []);
@@ -44,24 +46,28 @@ function History() {
     }
   }
 
-  async function run(tensor, imgN) {
+  async function run(tensor, tensor2, imgN) {
     const start = new Date();
     const threshold = 0.75;
+    let out;
+    let out2;
 
-    try {
-      const feeds = { images: tensor };
-      const result = await session.run(feeds);
-      output(result.output, threshold, imgN);
-    } catch (e) {
-      console.log(e);
-    }
+    const feeds = { images: tensor };
+    const result = await session.run(feeds);
+    out = output(result.output, threshold);
+
+    const feeds2 = { images: tensor2 };
+    const result2 = await session.run(feeds2);
+    out2 = output(result2.output, threshold, imgN);
 
     const end = new Date();
     const inferTime = end.getTime() - start.getTime();
     console.log('Inference time: ' + inferTime + ' ms');
+
+    return [out, out2];
   }
 
-  const predict = async (e) => {
+  function predict() {
     console.log('Predicting...');
 
     const dims = [1,3,640,640];
@@ -72,10 +78,16 @@ function History() {
     const tensor = toTensor(img, dims), 
           tensor2 = toTensor(img2, dims);
 
-    console.log('1st prediction');
-    run(tensor);
-    console.log('2nd prediction');
-    run(tensor2, 2);
+    run(tensor, tensor2, 2).then((result) => {
+      result[1].then((response) => {
+        result[0].then((result) => {
+          storeDetections(response);
+          storeDetections(result);
+          setUpdate((prev) => !prev);
+        });
+      });
+    });
+
   }
 
   return (
@@ -100,9 +112,12 @@ function History() {
       </div>
 
       <div className="container m-4">
-        <Detections />
+        <Detections state={update} />
       </div>
 
+      <div className="container m-4">
+        <Statistics state={update} />
+      </div>
     </div>
   );
 }
