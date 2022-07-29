@@ -79,10 +79,11 @@ function History() {
 
     run(tensor).then((result) => {
       storeDetections(result);
+      setUpdate((prev) => !prev);
     });
     run(tensor2, 2).then((result) => {
       storeDetections(result);
-      setUpdate(JSON.parse(sessionStorage.getItem("detections")));
+      setUpdate((prev) => !prev);
     });
   }
 
