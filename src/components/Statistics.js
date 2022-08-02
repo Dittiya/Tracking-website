@@ -28,19 +28,17 @@ function Statistics({ state }) {
     setOps(tempOps);
   }
 
-  function bar() {
-    console.log(ops);
-  }
-
   return (
     <div className="container">
       <div id="btn-navbar" className="flex">
-        <button className="mr-2" onClick={countOps}>Count Operators</button>
-        <button className="mr-2">6 Stars Rate-up</button>
+        <button className="mr-2">Operators</button>
+        <button className="mr-2">Export</button>
         <button className="mr-2" onClick={reload}>Reload</button>
       </div>
-      <div id="display-stats">
-        <h1>Display here</h1>
+      <div id="display-rateup">
+        <h1>Next 6 stars in x pulls</h1>
+      </div>
+      <div id="display-stats" className="m-2">
         {ops.map((val, key) => (<h1 key={key}>{classesJSON[key]['name']} x {val}</h1>))}
       </div>
     </div>
