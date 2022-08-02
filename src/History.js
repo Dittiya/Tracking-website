@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { output, storeDetections } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
-import Detections from "./components/Detections";
 import Statistics from "./components/Statistics";
 
 function History() {
@@ -104,15 +103,12 @@ function History() {
             <canvas id="image-canvas"></canvas>
           </div>
 
-          <div className='container m-4'>
-            <button id="btn-predict" className={`${session ? '' : 'invisible'}`} onClick={predict}>Predict</button>
-          </div>
         </div>
 
-      </div>
+        <div className='container mt-4'>
+          <button id="btn-predict" className={`rounded-lg p-1 font-medium bg-slate-100 text-slate-900 ${session ? '' : 'invisible'}`} onClick={predict}>Predict</button>
+        </div>
 
-      <div className="container m-4">
-        <Detections state={update} />
       </div>
 
       <div className="container m-4">
