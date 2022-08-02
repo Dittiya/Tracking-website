@@ -38,8 +38,25 @@ function Statistics({ state }) {
       <div id="display-rateup">
         <h1>Next 6 stars in x pulls</h1>
       </div>
-      <div id="display-stats" className="m-2">
-        {ops.map((val, key) => (<h1 key={key}>{classesJSON[key]['name']} x {val}</h1>))}
+
+      {/* Table */}
+      <div id="display-stats" className="m-2 overflow-x-auto relative">
+        <table className="table-auto">
+          <thead className="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th className="p-2 text-left">Operators</th>
+              <th className="p-2 text-left">Amount</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {ops.map((val, key) => (
+              <tr key={key}>
+                <td className="p-2">{classesJSON[key]['name']}</td>
+                <td className="p-2 text-center">{val}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
