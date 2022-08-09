@@ -23,7 +23,7 @@ export function output(prediction, threshold, imgN) {
             const y = data[i+1];
             const w = data[i+2];
             const h = data[i+3];
-            const predClass = getClass(data.slice(i+5, i+stride), threshold);
+            const predClass = getClass(data.slice(i+5, i+stride));
 
             if (predClass === -1) break;
 
@@ -39,15 +39,20 @@ export function output(prediction, threshold, imgN) {
     return nonMaxSuppBox(preds, imgN);
 }
 
-function getClass(data, threshold) {
-    const isClass = (e) => e > threshold;
-    return data.findIndex(isClass);
+// function getClass(data, threshold) {
+//     const isClass = (e) => e > threshold;
+//     return data.findIndex(isClass);
+// }
+
+function getClass(data) {
+    const max = Math.max(...data);
+    return data.indexOf(max);
 }
 
 function drawBoxes(coord, imgN) {
     let canvas = document.getElementById('image-canvas');
     let ctx = canvas.getContext('2d');
-    ctx.lineWidth = "4";
+    ctx.lineWidth = "2";
     ctx.strokeStyle = "red";
 
     let [x, y, w, h, conf, classIdx] = coord;
@@ -60,10 +65,10 @@ function drawBoxes(coord, imgN) {
     ctx.rect(x, y, w, h);
     ctx.stroke();
 
-    ctx.font = "normal 900 24px Unknown, sans-serif";
+    ctx.font = "normal 600 18px Unknown, sans-serif";
     ctx.fillStyle = "white"
     ctx.fillText(conf.toFixed(2), x, y-2);
-    ctx.fillText(classesJSON[classIdx]['name'], x+60, y-2);
+    ctx.fillText(classesJSON[classIdx]['name'], x+40, y-2);
 }
 
 async function nonMaxSuppBox(predictions, imgN) {
