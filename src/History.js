@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { output, storeDetections } from "./yolo_utils/postprocess";
+import { storeDetections } from "./yolo_utils/postprocess";
 import { toTensor, imageData } from "./yolo_utils/preprocess";
+import { getConfidence, runPrediction } from "./yolo_utils/modelHelper";
 import Statistics from "./components/Statistics";
 
 function History() {
   const [session, setSession] = useState(false);
   const [update, setUpdate] = useState(false);
+  const confidence = getConfidence();
 
   async function loadModel() {
     const path = process.env.PUBLIC_URL + '/best.onnx';
@@ -45,27 +47,6 @@ function History() {
     }
   }
 
-  async function run(tensor, tensor2, imgN) {
-    const start = new Date();
-    const threshold = 0.75;
-    let out;
-    let out2;
-
-    const feeds = { images: tensor };
-    const result = await session.run(feeds);
-    out = output(result.output, threshold);
-
-    const feeds2 = { images: tensor2 };
-    const result2 = await session.run(feeds2);
-    out2 = output(result2.output, threshold, imgN);
-
-    const end = new Date();
-    const inferTime = end.getTime() - start.getTime();
-    console.log('Inference time: ' + inferTime + ' ms');
-
-    return [out, out2];
-  }
-
   function predict() {
     console.log('Predicting...');
 
@@ -77,7 +58,7 @@ function History() {
     const tensor = toTensor(img, dims), 
           tensor2 = toTensor(img2, dims);
 
-    run(tensor, tensor2, 2).then((result) => {
+    runPrediction(session, tensor, tensor2, 2).then((result) => {
       result[1].then((response) => {
         result[0].then((result) => {
           storeDetections(response);
@@ -86,7 +67,14 @@ function History() {
         });
       });
     });
+  }
 
+  const changeThreshold = (e) => {
+    const confidence = e.target.value / 100;
+    const label = document.getElementById('conf-value');
+
+    sessionStorage.setItem("confThreshold", confidence);
+    label.textContent=confidence;
   }
 
   return (
@@ -97,16 +85,20 @@ function History() {
         <label htmlFor="image-file" className="mr-4">Upload image</label>
         <input id="image-file" type="file" onChange={changeImg}></input>
         <div className="flex flex-row">
-
           <div className="w-auto">
             <h1 className="text-2xl">Preview Image</h1>
             <canvas id="image-canvas"></canvas>
           </div>
-
         </div>
 
-        <div className='container mt-4'>
-          <button id="btn-predict" className={`rounded-lg p-1 font-medium bg-slate-100 text-slate-900 ${session ? '' : 'invisible'}`} onClick={predict}>Predict</button>
+        <div className='mt-4 flex flex-row'>
+          <span>Confidence</span>
+          <div className="grid grid-rows-2 place-items-center">
+            <input type="range" min="0" max="100" step="5" defaultValue={confidence*100} className="ml-2" onChange={changeThreshold}></input>
+            <span id="conf-value">{confidence}</span>
+          </div>
+          <button id="btn-predict" className={`rounded-lg p-1 font-medium bg-slate-100 text-slate-900 ml-2 ${session ? '' : 'invisible'}`} onClick={predict}>
+            Predict</button>
         </div>
 
       </div>
