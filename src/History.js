@@ -7,6 +7,7 @@ import Statistics from "./components/Statistics";
 function History() {
   const [session, setSession] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [modelText, setText] = useState('Not Ready');
   const confidence = getConfidence();
 
   async function loadModel() {
@@ -18,6 +19,7 @@ function History() {
     loadModel().then(res => {
       console.log('Session loaded!');
       setSession(res);
+      setText('Predict');
     });
   }, []);
 
@@ -91,14 +93,16 @@ function History() {
           </div>
         </div>
 
-        <div className='mt-4 flex flex-row'>
+        <div className='mt-4 flex flex-row w-max'>
           <span>Confidence</span>
           <div className="grid grid-rows-2 place-items-center">
             <input type="range" min="0" max="100" step="5" defaultValue={confidence*100} className="ml-2" onChange={changeThreshold}></input>
             <span id="conf-value">{confidence}</span>
           </div>
-          <button id="btn-predict" className={`rounded-lg p-1 font-medium bg-slate-100 text-slate-900 ml-2 ${session ? '' : 'invisible'}`} onClick={predict}>
-            Predict</button>
+          <div>
+            <button id="btn-predict" className={`rounded-lg shrink p-1 font-medium text-slate-900 ml-2 hover:bg-slate-200 ${session ? 'bg-slate-100' : 'bg-slate-500'}`} onClick={predict}>
+              {modelText}</button>
+          </div>
         </div>
 
       </div>
