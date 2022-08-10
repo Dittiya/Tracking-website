@@ -11,7 +11,7 @@ function App() {
         <Route path='/' element={<Navigation />}>
           <Route path='/' element={<Home />} />
           <Route path='history' element={<History />} />
-          <Route path='counter' element={<Counter />} />
+          <Route path='calculator' element={<Counter />} />
         </Route>
       </Routes>
     </div>

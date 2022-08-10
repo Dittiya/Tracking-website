@@ -4,7 +4,7 @@ function Navigation() {
   const routes = [
     ['Home', '/'],
     ['History', 'history'],
-    ['Counter', 'counter']
+    ['Calculator', 'calculator']
   ];
 
   return (
