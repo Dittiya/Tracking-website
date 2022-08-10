@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function Counter() {
-  const [pulls, setPulls] = useState(() => {
-    const total = parseInt(sessionStorage.getItem("orundums")) + parseInt(sessionStorage.getItem("oriPrime")) * 180;
-    return parseInt(total / 600);
-  });
   const [orundums] = useState(parseInt(sessionStorage.getItem("orundums")) || 0);
   const [prime] = useState(parseInt(sessionStorage.getItem("oriPrime")) || 0);
+  const [pulls, setPulls] = useState(() => { 
+    return parseInt((orundums + prime * 180) / 600); 
+  });
 
   const countOrundums = (e) => {
     const regex = /^\d+$/;
@@ -25,8 +24,8 @@ function Counter() {
   }
 
   function countPulls() {
-    const orundums = parseInt(sessionStorage.getItem("orundums"));
-    const prime = parseInt(sessionStorage.getItem("oriPrime"));
+    const orundums = parseInt(sessionStorage.getItem("orundums")) || 0;
+    const prime = parseInt(sessionStorage.getItem("oriPrime")) || 0;
     const total = orundums + prime * 180;
     setPulls(parseInt(total / 600));
   }
@@ -35,7 +34,7 @@ function Counter() {
     <div className="container m-4">
       Counter page
 
-      <div>
+      <div id="calculator">
         <div className="m-2">
           <label htmlFor="orundums">Orundums</label>
           <input name="orundums" type="number" defaultValue={orundums} onChange={countOrundums} className="text-black ml-2"></input>
@@ -48,6 +47,11 @@ function Counter() {
           <label>{pulls} total pulls</label>
         </div>
       </div>
+
+      <div id="forecasting">
+
+      </div>
+
     </div>
   );
 }
