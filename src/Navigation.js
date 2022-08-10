@@ -1,13 +1,16 @@
 import { Outlet, Link } from 'react-router-dom';
 
 function Navigation() {
+  const routes = [
+    ['Home', '/'],
+    ['History', 'history'],
+    ['Counter', 'counter']
+  ];
+
   return (
     <div>
       <nav className='bg-gray-800 flex sm:justify-left space-x-4 pl-4'>
-        {[
-          ['Home', '/'],
-          ['History', 'history'],
-        ].map(([title, url]) => (
+        {routes.map(([title, url]) => (
           <Link key={title} to={url} className='rounded-lg px-3 py-2 font-medium hover:bg-slate-100 hover:text-slate-900'>
             {title}
           </Link>

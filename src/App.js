@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navigation from './Navigation';
 import Home from './Home';
 import History from './History';
+import Counter from './Counter';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path='/' element={<Navigation />}>
           <Route path='/' element={<Home />} />
           <Route path='history' element={<History />} />
+          <Route path='counter' element={<Counter />} />
         </Route>
       </Routes>
     </div>
