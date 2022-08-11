@@ -6,9 +6,10 @@ function Home() {
 
   useEffect(() => {
     fetchMotd().then((resp) => {
+      console.log(resp);
       setMotd(resp['message_1']);
     });
-  });
+  }, []);
 
   async function fetchMotd() {
     const url = 'https://raw.githubusercontent.com/Dittiya/Tracking-website/master/public/motd.json';
