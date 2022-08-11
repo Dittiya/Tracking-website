@@ -23,11 +23,11 @@ export function output(prediction, threshold, imgN) {
             const y = data[i+1];
             const w = data[i+2];
             const h = data[i+3];
-            const predClass = getClass(data.slice(i+5, i+stride));
+            const [predClass, predConf] = getClass(data.slice(i+5, i+stride));
 
             if (predClass === -1) break;
 
-            box = [...box, x-0.5*w, y-0.5*h, w, h, confidence, predClass];
+            box = [...box, x-0.5*w, y-0.5*h, w, h, predConf, predClass];
             preds = [...preds, box];
         }
     }
@@ -46,7 +46,7 @@ export function output(prediction, threshold, imgN) {
 
 function getClass(data) {
     const max = Math.max(...data);
-    return data.indexOf(max);
+    return [data.indexOf(max), max];
 }
 
 function drawBoxes(coord, imgN) {
@@ -66,7 +66,7 @@ function drawBoxes(coord, imgN) {
     ctx.stroke();
 
     ctx.font = "normal 600 18px Unknown, sans-serif";
-    ctx.fillStyle = "white"
+    ctx.fillStyle = "white";
     ctx.fillText(conf.toFixed(2), x, y-2);
     ctx.fillText(classesJSON[classIdx]['name'], x+40, y-2);
 }
