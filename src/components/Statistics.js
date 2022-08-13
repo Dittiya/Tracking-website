@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react";
 import classesJSON from '../yolo_utils/classes.json';
+import { Grid } from 'gridjs-react'
 
 function Statistics({ state }) {
-  const [detections, setDetection] = useState(JSON.parse(sessionStorage.getItem("detections")));
-  const [ops, setOps] = useState([]);
-
-  useEffect(() => {
-    setDetection(JSON.parse(sessionStorage.getItem("detections")));
-  }, [state]);
+  const [detections, setDetections] = useState([]);
 
   useEffect(() => {
     countOps();
-  }, [detections]);
-
-  function reload() {
-    let getDets = JSON.parse(sessionStorage.getItem("detections"));
-    setDetection(getDets);
-  }
+  }, [state]);
 
   function countOps() {
-    if (!detections) return;
+    const storage = JSON.parse(sessionStorage.getItem("detections")) || [];
+    console.log('run count...');
 
     let tempOps = [];
-    for (const operator of detections) {
+    for (const operator of storage) {
       tempOps[operator] = tempOps[operator] ? tempOps[operator] + 1 : 1;
     }
-    setOps(tempOps);
+
+    let mappedOps = [];
+    tempOps.map((count, index) => {
+      mappedOps = [...mappedOps, [classesJSON[index]['name'], count]];
+    })
+
+    setDetections(mappedOps);
+
+    return mappedOps;
   }
 
   return (
@@ -33,31 +33,22 @@ function Statistics({ state }) {
       <div id="btn-navbar" className="flex">
         <button className="mr-2">Operators</button>
         <button className="mr-2">Export</button>
-        <button className="mr-2" onClick={reload}>Reload</button>
       </div>
       <div id="display-rateup">
         <h1>Next 6 stars in x pulls</h1>
       </div>
 
       {/* Table */}
-      <div id="display-stats" className="m-2 overflow-x-auto relative">
-        <table className="table-auto">
-          <thead className="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th className="p-2 text-left">Operators</th>
-              <th className="p-2 text-left">Amount</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {ops.map((val, key) => (
-              <tr key={key}>
-                <td className="p-2">{classesJSON[key]['name']}</td>
-                <td className="p-2 text-center">{val}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Grid
+        columns={['Name', 'Count']}
+        data={detections}
+        sort={true}
+        search={true}
+        pagination={{
+          enabled: true,
+          limit: 5
+        }}
+      />
     </div>
   );
 }
