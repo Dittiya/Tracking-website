@@ -14,6 +14,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Tracking pull history with computer vision (Manually & uploading screenshots).
 - Add 4 stars operators.
 - Reduce inference time using WASM, should probably create switch between WASM and WEBGL. Current inference time is ~5 seconds/image depending of the machine's cpu power. (WEBGL currently have issue with Yolov5 and ONNX runtime-web)
+## Credits
+- Kion-kun for the icon
 
 ## Available Scripts
 
