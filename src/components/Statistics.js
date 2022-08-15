@@ -20,7 +20,7 @@ function Statistics({ state }) {
 
     let mappedOps = [];
     tempOps.map((count, index) => {
-      mappedOps = [...mappedOps, [classesJSON[index]['name'], count, index]];
+      mappedOps = [...mappedOps, [classesJSON[index]['name'], count, index.toString()]];
     })
 
     setDetections(mappedOps);

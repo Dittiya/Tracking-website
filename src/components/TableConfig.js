@@ -16,7 +16,7 @@ export const columns = [
         attributes: (cell) => {
             if (cell) {
                 return {
-                    'style': 'text-align: center; cursor: pointer;',
+                    'style': 'text-align: center',
                 };
             }
         },
