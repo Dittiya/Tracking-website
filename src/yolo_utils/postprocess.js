@@ -84,7 +84,7 @@ async function nonMaxSuppBox(predictions, imgN) {
 
     let detections = [];
     for (let i=0; i<classes.length; i++) {
-        const result = await window.tf.image.nonMaxSuppressionAsync(boxes[i], scores[i], 10);
+        const result = await window.tf.image.nonMaxSuppressionAsync(boxes[i], scores[i], 10, 0.5, 0.1);
         const resultNMS = result.dataSync();
         for (let j=0; j<resultNMS.length; j++) {
             let boxNMS = boxes[i][resultNMS[j]];
