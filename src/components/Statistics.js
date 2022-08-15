@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import classesJSON from '../yolo_utils/classes.json';
-import { Grid } from 'gridjs-react'
+import { columns } from "./TableConfig";
+import { Grid } from 'gridjs-react';
 
 function Statistics({ state }) {
   const [detections, setDetections] = useState([]);
@@ -11,7 +12,6 @@ function Statistics({ state }) {
 
   function countOps() {
     const storage = JSON.parse(sessionStorage.getItem("detections")) || [];
-    console.log('run count...');
 
     let tempOps = [];
     for (const operator of storage) {
@@ -20,7 +20,7 @@ function Statistics({ state }) {
 
     let mappedOps = [];
     tempOps.map((count, index) => {
-      mappedOps = [...mappedOps, [classesJSON[index]['name'], count]];
+      mappedOps = [...mappedOps, [classesJSON[index]['name'], count, index]];
     })
 
     setDetections(mappedOps);
@@ -39,16 +39,18 @@ function Statistics({ state }) {
       </div>
 
       {/* Table */}
-      <Grid
-        columns={['Name', 'Count']}
-        data={detections}
-        sort={true}
-        search={true}
-        pagination={{
-          enabled: true,
-          limit: 5
-        }}
-      />
+      <div className="container flex">
+        <Grid
+          columns={columns}
+          data={detections}
+          sort={true}
+          search={true}
+          pagination={{
+            enabled: true,
+            limit: 5
+          }}
+        />
+      </div>
     </div>
   );
 }
