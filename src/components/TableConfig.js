@@ -1,18 +1,36 @@
-import { h } from "gridjs";
+import { h, html } from "gridjs";
+import classesJSON from '../yolo_utils/classes.json';
+
+const imgUrl = 'https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/';
 
 export const columns = [
     {
-        name: 'Name',
-        width: '100%',
-        formatter: (cell) => `Image: ${capitalize(cell)}`
+        name: 'id',
+        hidden: true
+    },
+    {
+        name: 'Operators',
+        formatter: (cell, row) => html(
+            `<center>
+                <img style="width: 20%" src="${imgUrl + classesJSON[row.cells[0].data]['actual'] + '.png'}">
+                <label>${classesJSON[row.cells[0].data]['name']}</label>
+            </center>`
+        )
     },
     {
         name: 'Count',
-        width: '25%'
+        width: '25%',
+        attributes: (cell) => {
+            if (cell) {
+                return {
+                    'style': 'text-align: center',
+                };
+            }
+        }
     },
     {
         name: 'Actions',
-        width: '50%',
+        width: '35%',
         attributes: (cell) => {
             if (cell) {
                 return {
@@ -35,7 +53,3 @@ export const columns = [
         }
     }
 ];
-
-const capitalize = (word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-}
