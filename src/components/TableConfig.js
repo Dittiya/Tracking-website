@@ -41,7 +41,10 @@ export const columns = [
         formatter: (cell, row) => {
             const add = h('button', {
                 className: 'py-2 mb-4 px-4 border rounded-md text-white bg-blue-600',
-                onClick: () => alert(`Adding 1 of ${row.cells[0].data}`)
+                onClick: () => {
+                    console.log(row.cells[0].data);
+                    storeDetections([row.cells[0].data]);
+                }
             }, 'Add');
 
             const reduce = h('button', {

@@ -108,7 +108,7 @@ function History() {
       </div>
 
       <div className="container m-4">
-        <Statistics state={update} />
+        <Statistics parentState={update} />
       </div>
     </div>
   );
