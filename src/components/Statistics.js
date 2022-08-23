@@ -33,7 +33,6 @@ function Statistics({ parentState }) {
     },
     {
       name: 'Actions',
-      width: '35%',
       attributes: (cell) => {
         if (cell) {
           return {
@@ -49,12 +48,12 @@ function Statistics({ parentState }) {
             storeDetections([row.cells[0].data]);
             setState(!state);
           }
-        }, 'Add');
+        }, '+');
 
         const reduce = h('button', {
           className: 'py-2 mb-4 px-4 border rounded-md text-white bg-blue-600',
           onClick: () => alert(`Reducing 1 of ${row.cells[0].data}`)
-        }, 'Reduce');
+        }, '-');
 
         return [add, reduce];
       }
