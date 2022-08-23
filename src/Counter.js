@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DateTable from "./DateTable"
 
 function Counter() {
   const [orundums] = useState(parseInt(sessionStorage.getItem("orundums")) || 0);
@@ -49,7 +50,7 @@ function Counter() {
       </div>
 
       <div id="forecasting">
-
+        <DateTable pulls={pulls} />
       </div>
 
     </div>
