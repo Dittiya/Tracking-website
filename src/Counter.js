@@ -44,9 +44,6 @@ function Counter() {
           <label htmlFor="prime">Originium Prime</label>
           <input name="prime" type="number" defaultValue={prime} onChange={countOP} className="text-black ml-2"></input>
         </div>
-        <div>
-          <label>{pulls} total pulls</label>
-        </div>
       </div>
 
       <div id="forecasting">

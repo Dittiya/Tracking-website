@@ -64,6 +64,11 @@ function DateTable({ pulls }) {
 				<li><strong>1 pull</strong> from Monthly login</li>
 			</div>
 			<div>
+				Not Included:
+				<li>Event rewards</li>
+				<li>Originite Prime</li>
+			</div>
+			<div>
 				Range of: {dateRange} months from {dates[0]} to {dates[dateRange-1]}
 			</div>
 			<table className="table-fixed w-full">
