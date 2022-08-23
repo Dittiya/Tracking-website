@@ -57,7 +57,14 @@ function DateTable({ pulls }) {
 	return (
 		<div>
 			<div>
-				Range of: {dateRange}, From {dates[0]} - {dates[dateRange-1]}
+				Source:
+				<li><strong>7200 orundums</strong> from Annihilation</li>
+				<li><strong>4800 orundums</strong> from Dailies</li>
+				<li><strong>5 pulls</strong> from Green Certs Shop</li>
+				<li><strong>1 pull</strong> from Monthly login</li>
+			</div>
+			<div>
+				Range of: {dateRange} months from {dates[0]} to {dates[dateRange-1]}
 			</div>
 			<table className="table-fixed w-full">
 				<thead>
@@ -72,7 +79,7 @@ function DateTable({ pulls }) {
 						{monthlies.map((val, key) => <td key={key}>{val}</td>)}
 					</tr>
 					<tr>
-						<th className="uppercase bg-gray-800 p-2">Distinction</th>
+						<th className="uppercase bg-gray-800 p-2">+Distinction</th>
 						{certs.map((val, key) => <td key={key}>{val}</td>)}
 					</tr>
 					<tr>
