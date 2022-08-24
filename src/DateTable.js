@@ -84,7 +84,7 @@ function DateTable({ pulls }) {
 						{monthlies.map((val, key) => <td key={key}>{val}</td>)}
 					</tr>
 					<tr>
-						<th className="uppercase bg-gray-800 p-2">+Distinction</th>
+						<th className="uppercase bg-gray-800 p-2">With Distinction</th>
 						{certs.map((val, key) => <td key={key}>{val}</td>)}
 					</tr>
 					<tr>
