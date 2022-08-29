@@ -44,7 +44,6 @@ function Statistics({ parentState }) {
         const add = h('button', {
           className: 'py-2 mb-4 px-4 border rounded-md text-white bg-blue-600',
           onClick: () => {
-            console.log(row.cells[0].data);
             storeDetections([row.cells[0].data]);
             setState(!state);
           }
