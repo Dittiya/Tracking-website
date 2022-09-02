@@ -19,6 +19,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Reduce inference time using WASM, should probably create switch between WASM and WEBGL. Current inference time is ~5 seconds/image depending of the machine's cpu power. (WEBGL currently have issue with Yolov5 and ONNX runtime-web)
 - Get better table (or not).
 - Calculate certs earnings per pull.
+- Add charts to visualize data.
+- Add upcoming events to Calculator tab.
+
 
 ## Credits
 - Kion-kun for the [icon](https://twitter.com/kionkun1/status/1232194826919018499).
