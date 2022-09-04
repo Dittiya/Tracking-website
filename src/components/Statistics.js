@@ -78,6 +78,10 @@ function Statistics({ parentState }) {
     countOps();
   }, [parentState, state]);
 
+  const raritySort = (a, b) => {
+    return a[2] - b[2] || a[1].localeCompare(b[1]);
+  }
+
   function countOps() {
     const storage = JSON.parse(sessionStorage.getItem("detections")) || [];
 
@@ -99,7 +103,7 @@ function Statistics({ parentState }) {
         ]
       ];
     })
-
+    mappedOps.sort(raritySort);
     setDetections(mappedOps);
 
     return mappedOps;

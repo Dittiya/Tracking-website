@@ -20,13 +20,6 @@ ChartJS.register(
 );
 
 function Charts({ data, type }) {
-  useEffect(() => {
-    data.sort(raritySort);
-  }, [data]);
-
-  const raritySort = (a, b) => {
-    return a[2] - b[2] || a[1].localeCompare(b[1]);
-  }
   
   const options = {
     responsive: true,
