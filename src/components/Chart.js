@@ -1,4 +1,4 @@
-import { Chart } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,7 +8,6 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import { useEffect, useState } from 'react';
 
 ChartJS.register(
   CategoryScale,
@@ -19,7 +18,7 @@ ChartJS.register(
   Legend
 );
 
-function Charts({ data, type }) {
+function Charts({ data }) {
   
   const options = {
     responsive: true,
@@ -55,7 +54,7 @@ function Charts({ data, type }) {
     ]
   }
 
-  return <Chart type={type} options={options} data={chartData} />
+  return <Bar options={options} data={chartData} />
 }
 
 export default Charts;
