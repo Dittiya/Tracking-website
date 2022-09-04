@@ -22,6 +22,17 @@ function Statistics({ parentState }) {
       )
     },
     {
+      name: 'Rarity',
+      width: '25%',
+      attributes: (cell) => {
+        if (cell) {
+          return {
+            'style': 'text-align: center',
+          };
+        }
+      }
+    },
+    {
       name: 'Count',
       width: '25%',
       attributes: (cell) => {
@@ -77,7 +88,16 @@ function Statistics({ parentState }) {
 
     let mappedOps = [];
     tempOps.map((count, index) => {
-      mappedOps = [...mappedOps, [index.toString(), classesJSON[index]['name'], count, 'temp']];
+      mappedOps = [
+        ...mappedOps, 
+        [
+          index.toString(),
+          classesJSON[index]['name'], 
+          classesJSON[index]['rarity'], 
+          count, 
+          'temp'
+        ]
+      ];
     })
 
     setDetections(mappedOps);
