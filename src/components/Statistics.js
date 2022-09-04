@@ -1,76 +1,8 @@
 import { useEffect, useState } from "react";
 import classesJSON from '../yolo_utils/classes.json';
-import { Grid } from 'gridjs-react';
-import { h, html } from "gridjs";
-import { storeDetections } from "../yolo_utils/postprocess";
 import Charts from "./Chart";
 
 function Statistics({ parentState }) {
-  const imgUrl = 'https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/';
-  const columns = [
-    {
-      name: 'id',
-      hidden: true
-    },
-    {
-      name: 'Operators',
-      formatter: (cell, row) => html(
-        `<center>
-          <img style="width: 20%" src="${imgUrl + classesJSON[row.cells[0].data]['actual'] + '.png'}">
-          <label>${classesJSON[row.cells[0].data]['name']}</label>
-        </center>`
-      )
-    },
-    {
-      name: 'Rarity',
-      width: '25%',
-      attributes: (cell) => {
-        if (cell) {
-          return {
-            'style': 'text-align: center',
-          };
-        }
-      }
-    },
-    {
-      name: 'Count',
-      width: '25%',
-      attributes: (cell) => {
-        if (cell) {
-          return {
-            'style': 'text-align: center',
-          };
-        }
-      }
-    },
-    {
-      name: 'Actions',
-      attributes: (cell) => {
-        if (cell) {
-          return {
-            'style': 'text-align: center',
-          };
-        }
-      },
-      formatter: (cell, row) => {
-        const add = h('button', {
-          className: 'py-2 mb-4 px-4 border rounded-md text-white bg-blue-600',
-          onClick: () => {
-            storeDetections([row.cells[0].data]);
-            setState(!state);
-          }
-        }, '+');
-
-        const reduce = h('button', {
-          className: 'py-2 mb-4 px-4 border rounded-md text-white bg-blue-600',
-          onClick: () => alert(`Reducing 1 of ${row.cells[0].data}`)
-        }, '-');
-
-        return [add, reduce];
-      }
-    }
-  ];
-
   const [detections, setDetections] = useState([]);
   const [state, setState] = useState(false);
 
@@ -117,21 +49,6 @@ function Statistics({ parentState }) {
       </div>
       <div id="display-rateup">
         <h1>Next 6 stars in x pulls</h1>
-      </div>
-
-      {/* Table */}
-      <div className="container flex">
-        <Grid
-          columns={columns}
-          data={detections}
-          sort={true}
-          search={true}
-          width={'1000px'}
-          pagination={{
-            enabled: true,
-            limit: 5
-          }}
-        />
       </div>
 
       <div id="histogram" className="bg-white">
