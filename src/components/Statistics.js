@@ -3,6 +3,7 @@ import classesJSON from '../yolo_utils/classes.json';
 import { Grid } from 'gridjs-react';
 import { h, html } from "gridjs";
 import { storeDetections } from "../yolo_utils/postprocess";
+import Charts from "./Chart";
 
 function Statistics({ parentState }) {
   const imgUrl = 'https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/';
@@ -107,6 +108,10 @@ function Statistics({ parentState }) {
             limit: 5
           }}
         />
+      </div>
+
+      <div id="histogram" className="bg-white">
+        <Charts data={detections} />
       </div>
     </div>
   );
