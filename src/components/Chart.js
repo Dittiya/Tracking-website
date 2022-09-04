@@ -28,12 +28,18 @@ function Charts({ data }) {
     initData();
   }, [data]);
 
+  const raritySort = (a, b) => {
+    return a[2] - b[2] || a[1].localeCompare(b[1]);
+  }
+
   function initData() {
     const labels = [];
     const countData = [];
+
+    data.sort(raritySort);
     data.forEach(e => {
       labels.push(e[1]);
-      countData.push(e[2]);
+      countData.push(e[3]);
     });
 
     setLabels(labels);
@@ -45,10 +51,7 @@ function Charts({ data }) {
     plugins: {
       title: {
         display: true,
-        text: 'Test Chart'
-      },
-      legend: {
-        position: 'top'
+        text: 'Historygram'
       }
     }
   }
