@@ -1,5 +1,4 @@
-import classesJSON from '../yolo_utils/classes.json';
-import { Bar } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,54 +19,50 @@ ChartJS.register(
   Legend
 );
 
-function Charts({ data }) {
-  const [labels, setLabels] = useState([]);
-  const [countData, setCount] = useState([]);
-
+function Charts({ data, type }) {
   useEffect(() => {
-    initData();
+    data.sort(raritySort);
   }, [data]);
 
   const raritySort = (a, b) => {
     return a[2] - b[2] || a[1].localeCompare(b[1]);
   }
-
-  function initData() {
-    const labels = [];
-    const countData = [];
-
-    data.sort(raritySort);
-    data.forEach(e => {
-      labels.push(e[1]);
-      countData.push(e[3]);
-    });
-
-    setLabels(labels);
-    setCount(countData);
-  }
   
   const options = {
     responsive: true,
+    scale: {
+      x: {
+        type: 'category',
+        labels: data.map(array => array[1]),
+        display: true,
+        position: 'bottom'
+      }
+    },
     plugins: {
       title: {
         display: true,
         text: 'Historygram'
+      },
+      legend: {
+        display: false
       }
     }
   }
 
   const chartData = {
-    labels: labels,
     datasets: [
       {
-        label: 'Count',
-        data: countData,
-        backgroundColor: 'rgba(50, 150, 255)'
+        label: 'count',
+        data: data.map(array => array[3]),
+        backgroundColor: data.map(array => {
+          if (array[2] === 3) return 'rgba(150, 150, 150, 0.75)';
+          else return 'rgba(147, 128, 207, 0.75)';
+        })
       }
     ]
   }
 
-  return <Bar options={options} data={chartData} />
+  return <Chart type={type} options={options} data={chartData} />
 }
 
 export default Charts;
