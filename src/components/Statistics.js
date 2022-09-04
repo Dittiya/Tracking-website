@@ -131,7 +131,7 @@ function Statistics({ parentState }) {
       </div>
 
       <div id="histogram" className="bg-white">
-        <Charts data={detections} />
+        <Charts data={detections} type="bar" />
       </div>
     </div>
   );
