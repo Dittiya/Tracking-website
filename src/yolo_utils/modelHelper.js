@@ -1,7 +1,7 @@
 import { output } from "./postprocess";
 
 export function getConfidence() {
-  const confidence = parseFloat(sessionStorage.getItem("confThreshold")) || 0.75;
+  const confidence = parseFloat(localStorage.getItem("confThreshold")) || 0.75;
   return confidence;
 }
 

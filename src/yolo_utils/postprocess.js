@@ -120,9 +120,9 @@ function separateBoxes(boxes) {
 }
 
 export function storeDetections(detections) {
-    let getter = JSON.parse(sessionStorage.getItem("detections"));
+    let getter = JSON.parse(localStorage.getItem("detections"));
     if (getter === null) {
-        sessionStorage.setItem("detections", JSON.stringify(detections));
+        localStorage.setItem("detections", JSON.stringify(detections));
         return;
     }
 
@@ -130,6 +130,6 @@ export function storeDetections(detections) {
         getter.push(detections[i]);
     }
 
-    sessionStorage.setItem("detections", JSON.stringify(getter));
+    localStorage.setItem("detections", JSON.stringify(getter));
     return;
 }

@@ -2,8 +2,8 @@ import { useState } from "react";
 import DateTable from "./DateTable"
 
 function Counter() {
-  const [orundums] = useState(parseInt(sessionStorage.getItem("orundums")) || 0);
-  const [prime] = useState(parseInt(sessionStorage.getItem("oriPrime")) || 0);
+  const [orundums] = useState(parseInt(localStorage.getItem("orundums")) || 0);
+  const [prime] = useState(parseInt(localStorage.getItem("oriPrime")) || 0);
   const [pulls, setPulls] = useState(() => { 
     return parseInt((orundums + prime * 180) / 600); 
   });
@@ -12,7 +12,7 @@ function Counter() {
     const regex = /^\d+$/;
     if (!e.target.value.match(regex)) return
     
-    sessionStorage.setItem("orundums", e.target.value);
+    localStorage.setItem("orundums", e.target.value);
     countPulls();
   }
 
@@ -20,13 +20,13 @@ function Counter() {
     const regex = /^\d+$/;
     if (!e.target.value.match(regex)) return
     
-    sessionStorage.setItem("oriPrime", e.target.value);
+    localStorage.setItem("oriPrime", e.target.value);
     countPulls();
   }
 
   function countPulls() {
-    const orundums = parseInt(sessionStorage.getItem("orundums")) || 0;
-    const prime = parseInt(sessionStorage.getItem("oriPrime")) || 0;
+    const orundums = parseInt(localStorage.getItem("orundums")) || 0;
+    const prime = parseInt(localStorage.getItem("oriPrime")) || 0;
     const total = orundums + prime * 180;
     setPulls(parseInt(total / 600));
   }

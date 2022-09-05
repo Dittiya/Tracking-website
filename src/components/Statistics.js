@@ -15,7 +15,7 @@ function Statistics({ parentState }) {
   }
 
   function countOps() {
-    const storage = JSON.parse(sessionStorage.getItem("detections")) || [];
+    const storage = JSON.parse(localStorage.getItem("detections")) || [];
 
     let tempOps = [];
     for (const operator of storage) {
@@ -40,12 +40,12 @@ function Statistics({ parentState }) {
   return (
     <div className="container">
       <div id="btn-navbar" className="flex">
-        <button className="mr-2">Operators</button>
         <button className="mr-2">Export</button>
       </div>
-      <div id="display-rateup">
+
+      {/* <div id="display-rateup">
         <h1>Next 6 stars in x pulls</h1>
-      </div>
+      </div> */}
 
       <div id="histogram" className="bg-white">
         <Charts data={detections} type="bar" />

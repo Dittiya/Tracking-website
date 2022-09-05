@@ -75,7 +75,7 @@ function History() {
     const confidence = e.target.value / 100;
     const label = document.getElementById('conf-value');
 
-    sessionStorage.setItem("confThreshold", confidence);
+    localStorage.setItem("confThreshold", confidence);
     label.textContent=confidence;
   }
 

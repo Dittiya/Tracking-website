@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import classesJSON from '../yolo_utils/classes.json';
 
 function Detections({ state }) {
-  const [detections, setDetection] = useState(JSON.parse(sessionStorage.getItem("detections")));
+  const [detections, setDetection] = useState(JSON.parse(localStorage.getItem("detections")));
 
   useEffect(() => {
-    setDetection(JSON.parse(sessionStorage.getItem("detections")));
+    setDetection(JSON.parse(localStorage.getItem("detections")));
   }, [state]);
 
   function reload() {
-    let getDets = JSON.parse(sessionStorage.getItem("detections"));
+    let getDets = JSON.parse(localStorage.getItem("detections"));
     setDetection(getDets);
   }
 
