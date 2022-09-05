@@ -18,7 +18,7 @@ function Navigation() {
       </nav>
       <Outlet />
       <footer className="bg-gray-700">
-        <h1 className='text-gray-700'>Deez</h1>
+        <h1 className='text-gray-700'>Web development is my passion</h1>
       </footer>
     </div>
   );
