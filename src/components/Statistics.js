@@ -22,18 +22,14 @@ function Statistics({ parentState }) {
       tempOps[operator] = tempOps[operator] ? tempOps[operator] + 1 : 1;
     }
 
-    let mappedOps = [];
+    const mappedOps = [];
     tempOps.map((count, index) => {
-      mappedOps = [
-        ...mappedOps, 
-        [
-          index.toString(),
-          classesJSON[index]['name'], 
-          classesJSON[index]['rarity'], 
-          count, 
-          'temp'
-        ]
-      ];
+      mappedOps.push([
+        index,
+        classesJSON[index]['name'],
+        classesJSON[index]['rarity'],
+        count
+      ]);
     })
     mappedOps.sort(raritySort);
     setDetections(mappedOps);
