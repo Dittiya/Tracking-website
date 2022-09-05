@@ -4,11 +4,10 @@ import Charts from "./Chart";
 
 function Statistics({ parentState }) {
   const [detections, setDetections] = useState([]);
-  const [state, setState] = useState(false);
 
   useEffect(() => {
     countOps();
-  }, [parentState, state]);
+  }, [parentState]);
 
   const raritySort = (a, b) => {
     return a[2] - b[2] || a[1].localeCompare(b[1]);
@@ -37,6 +36,18 @@ function Statistics({ parentState }) {
     return mappedOps;
   }
 
+  const filteredOperators = () => {
+    const counts = [0,0,0];
+
+    detections.forEach(arr => {
+      if (arr[2] === 3) counts[1] += arr[3];
+      else if (arr[2] === 4) counts[2] += arr[3];
+    });
+    counts[0] = counts[1] + counts[2];
+
+    return counts;
+  }
+
   return (
     <div className="container">
       <div id="btn-navbar" className="flex">
@@ -49,6 +60,12 @@ function Statistics({ parentState }) {
 
       <div id="histogram" className="bg-white">
         <Charts data={detections} type="bar" />
+      </div>
+
+      <div id="summary">
+        <label>Total Pulls: {filteredOperators()[0]}</label> <br />
+        <label>Among them you pulled {filteredOperators()[1]} 3* operators</label> <br />
+        <label>Among them you pulled {filteredOperators()[2]} 4* operators</label> <br />
       </div>
     </div>
   );
