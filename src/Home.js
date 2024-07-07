@@ -1,30 +1,22 @@
-import { useEffect } from "react";
 import { useState } from "react";
+const cmsConfigUrl = process.env.PUBLIC_URL + "/cms.json";
 
 function Home() {
-  const [motd, setMotd] = useState('Waiting...');
+  const [image, setImage] = useState("Waiting...");
 
-  useEffect(() => {
-    fetchMotd().then((resp) => {
-      console.log(resp);
-      setMotd(resp['message_1']);
-    });
-  }, []);
-
-  async function fetchMotd() {
-    const url = 'https://raw.githubusercontent.com/Dittiya/Tracking-website/master/public/motd.json';
-    const getter = await fetch(url);
-    const data = await getter.json();
-
-    return data;
+  async function fetchImage(url) {
+    return (await fetch(url)).json();
   }
+
+  fetchImage(cmsConfigUrl).then((resp) => { setImage(resp.showcase.image.url) });
 
   return (
     <div className='container m-4'>
-      Hello World!
+      Showcase! <br/>
 
-      <div id="motd">
-        {motd}
+      Try putting this image into the History tab
+      <div id="showcase-image">
+        <img src={image} alt="showcase"/>
       </div>
     </div>
   );
