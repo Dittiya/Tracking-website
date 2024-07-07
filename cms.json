@@ -16,5 +16,10 @@
         "lottery": true
       }
     ]
+  },
+  "showcase": {
+    "image": {
+      "url": "https://dittiyacms.wordpress.com/wp-content/uploads/2024/07/showcase.png?w=1024"
+    }
   }
 }
